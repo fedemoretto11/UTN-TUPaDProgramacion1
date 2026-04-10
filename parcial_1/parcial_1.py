@@ -2,6 +2,7 @@
 lista_herramientas = []
 lista_existencias = []
 opcion_menu = ""
+existencias_iniciales_cargadas = False
 
 while opcion_menu != "8":
   print("\n--- Menu de la Ferreteria Local ---\n")
@@ -24,28 +25,33 @@ while opcion_menu != "8":
 
   if opcion_menu == "1":
     print("\n--- Carga inicial de las herramientas ---")
-    cantidad_herramientas = input("Ingrese la cantidad de herramientas a cargar: ")
-
-    while not cantidad_herramientas.isdigit() or int(cantidad_herramientas) <= 0:
-      print("Cantidad invalida. Por favor ingrese un numero entero positivo.")
+    if len(lista_herramientas) > 0:
+      print("La carga inicial de herramientas ya fue realizada.")
+    else:
       cantidad_herramientas = input("Ingrese la cantidad de herramientas a cargar: ")
-    
-    cantidad_herramientas = int(cantidad_herramientas)
 
-    for i in range(cantidad_herramientas):
-      herramienta = input(f"Ingrese el nombre de la herramienta {i+1}: ")
+      while not cantidad_herramientas.isdigit() or int(cantidad_herramientas) <= 0:
+        print("Cantidad invalida. Por favor ingrese un numero entero positivo.")
+        cantidad_herramientas = input("Ingrese la cantidad de herramientas a cargar: ")
+      
+      cantidad_herramientas = int(cantidad_herramientas)
 
-      while not herramienta.isalpha() or herramienta == "":
-        print("Nombre de herramienta incorrecto. Por favor ingrese un nombre valido.")
-        herramienta = input(f"Ingrese el nombre de la herramienta {i+1}: ")
+      for i in range(cantidad_herramientas):
+        herramienta = input(f"Ingrese el nombre de la herramienta {i+1}: ").lower()
 
-      lista_herramientas.append(herramienta)
-      lista_existencias.append(0)
-    print("Carga inicial de herramientas completada.")
+        while not herramienta.isalpha() or herramienta == "":
+          print("Nombre de herramienta incorrecto. Por favor ingrese un nombre valido.")
+          herramienta = input(f"Ingrese el nombre de la herramienta {i+1}: ").lower()
+
+        lista_herramientas.append(herramienta)
+        lista_existencias.append(0)
+      print("Carga inicial de herramientas completada.")
   elif opcion_menu == "2":
     print("\n--- Carga de existencias ---")
     if len(lista_herramientas) == 0:
       print("No hay herramientas cargadas. Por favor realice la carga inicial primero.")
+    elif existencias_iniciales_cargadas:
+      print("Las existencias iniciales ya fueron cargadas.")
     else:
       for i in range(len(lista_herramientas)):
         print(f"{i+1}. {lista_herramientas[i]} - Existencias actuales: {lista_existencias[i]}")
@@ -58,6 +64,7 @@ while opcion_menu != "8":
         
         lista_existencias[i] += int(cantidad_cargar)
         print(f"Existencias actualizadas para {lista_herramientas[i]}. Nueva cantidad: {lista_existencias[i]}")
+      existencias_iniciales_cargadas = True
   elif opcion_menu == "3":
     print("\n--- Visualizacion de inventario ---")
     if len(lista_herramientas) == 0:
@@ -71,7 +78,7 @@ while opcion_menu != "8":
     if len(lista_herramientas) == 0:
       print("No hay herramientas cargadas. Por favor realice la carga inicial primero.")
     else:
-      nombre_herramienta = input("Ingrese el nombre de la herramienta para consultar su stock: ")
+      nombre_herramienta = input("Ingrese el nombre de la herramienta para consultar su stock: ").lower()
       if nombre_herramienta in lista_herramientas:
         index = lista_herramientas.index(nombre_herramienta)
         print(f"Stock disponible para {lista_herramientas[index]}: {lista_existencias[index]}")
@@ -91,11 +98,11 @@ while opcion_menu != "8":
         print("No hay herramientas agotadas.")
   elif opcion_menu == "6":
     print("\n--- Alta de Nuevo Producto ---")
-    nuevo_producto = input("Ingrese el nombre del nuevo producto: ")
+    nuevo_producto = input("Ingrese el nombre del nuevo producto: ").lower()
 
     while not nuevo_producto.isalpha() or nuevo_producto == "":
       print("Nombre de producto incorrecto. Por favor ingrese un nombre valido.")
-      nuevo_producto = input("Ingrese el nombre del nuevo producto: ")
+      nuevo_producto = input("Ingrese el nombre del nuevo producto: ").lower()
 
     if nuevo_producto in lista_herramientas:
       print("El producto ya existe en el inventario.")
@@ -113,15 +120,15 @@ while opcion_menu != "8":
     if len(lista_herramientas) == 0:
       print("No hay herramientas cargadas. Por favor realice la carga inicial primero.")
     else:
-      nombre_producto = input("Ingrese el nombre del producto para actualizar su stock: ")
+      nombre_producto = input("Ingrese el nombre del producto para actualizar su stock: ").lower()
       if nombre_producto in lista_herramientas:
         index = lista_herramientas.index(nombre_producto)
         print(f"Stock actual para {lista_herramientas[index]}: {lista_existencias[index]}")
-        tipo_actualizacion = input("¿Desea realizar una venta o un ingreso? (venta/ingreso): ")
+        tipo_actualizacion = input("¿Desea realizar una venta o un ingreso? (venta/ingreso): ").lower()
 
-        while tipo_actualizacion.lower() not in ["venta", "ingreso"]:
+        while tipo_actualizacion not in ["venta", "ingreso"]:
           print("Opción inválida. Por favor ingrese 'venta' o 'ingreso'.")
-          tipo_actualizacion = input("¿Desea realizar una venta o un ingreso? (venta/ingreso): ")
+          tipo_actualizacion = input("¿Desea realizar una venta o un ingreso? (venta/ingreso): ").lower()
 
         cantidad_actualizar = input("Ingrese la cantidad a actualizar: ")
 
@@ -131,7 +138,7 @@ while opcion_menu != "8":
 
         cantidad_actualizar = int(cantidad_actualizar)
 
-        if tipo_actualizacion.lower() == "venta":
+        if tipo_actualizacion == "venta":
           if cantidad_actualizar > lista_existencias[index]:
             print("No hay suficiente stock para realizar la venta.")
           else:
